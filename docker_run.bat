@@ -1,45 +1,43 @@
 @echo off
 REM ─────────────────────────────────────────────────────────────────────────────
-REM  docker_run.bat  —  Run the Custom VM inside a Linux Docker container
+REM  docker_run.bat — Run any language file on the Linux Hypervisor VM
 REM
 REM  Usage:
-REM    docker_run.bat              → runs default program.vm
-REM    docker_run.bat myfile.vm   → runs a custom .vm file from this folder
+REM    docker_run.bat                  → interactive menu (inside Linux)
+REM    docker_run.bat program.vm       → run Custom VM file
+REM    docker_run.bat examples\hello.py  → run Python
+REM    docker_run.bat examples\hello.c   → run C
+REM    docker_run.bat examples\hello.cpp → run C++
+REM    docker_run.bat examples\hello.js  → run JavaScript
 REM ─────────────────────────────────────────────────────────────────────────────
-
 echo.
-echo ╔══════════════════════════════════════════════════════╗
-echo ║   Custom VM  —  Running on Linux (Docker)            ║
-echo ╚══════════════════════════════════════════════════════╝
+echo ╔══════════════════════════════════════════════════════════╗
+echo ║   Hypervisor VM  —  Running on Linux (Docker)            ║
+echo ║   Host OS: Ubuntu 22.04  ^|  Hypervisor: Hyper-V/WSL2   ║
+echo ╚══════════════════════════════════════════════════════════╝
 echo.
 
-REM Check Docker is installed
 docker --version >nul 2>&1
 IF %ERRORLEVEL% NEQ 0 (
-    echo [ERROR] Docker is not installed or not running.
-    pause
-    exit /b 1
+    echo [ERROR] Docker not running. Start Docker Desktop first!
+    pause & exit /b 1
 )
 
-REM Check the image exists
-docker image inspect custom-vm >nul 2>&1
+docker image inspect hypervisor-vm >nul 2>&1
 IF %ERRORLEVEL% NEQ 0 (
-    echo [ERROR] Docker image 'custom-vm' not found.
-    echo         Run docker_build.bat first!
-    pause
-    exit /b 1
+    echo [ERROR] Image 'hypervisor-vm' not found. Run docker_build.bat first!
+    pause & exit /b 1
 )
 
-REM If a custom .vm file is provided as argument, mount current dir and use it
 IF "%~1"=="" (
-    echo [INFO] Running default program.vm inside Linux container...
+    echo [Linux] Launching interactive multi-language menu...
     echo.
-    docker run --rm custom-vm
+    docker run --rm -it -v "%cd%:/app/code" hypervisor-vm
 ) ELSE (
-    echo [INFO] Running %~1 inside Linux container...
+    REM Resolve the file — if it's in a subdirectory, mount appropriately
+    echo [Linux] Running: %~1
     echo.
-    REM Mount current directory as /app/programs so custom .vm files are accessible
-    docker run --rm -v "%cd%:/app/programs" custom-vm programs/%~1
+    docker run --rm -v "%cd%:/app/code" hypervisor-vm code/%~1
 )
 
 echo.
