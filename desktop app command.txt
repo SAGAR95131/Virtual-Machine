@@ -1,0 +1,35 @@
+Build a desktop application in Java that implements a stack-based Virtual Machine for a custom programming language with AI integration.
+
+Requirements:
+
+1. The application must have a GUI using JavaFX or Swing.
+2. The Virtual Machine should support the following instructions:
+   PUSH <value>, ADD, SUB, MUL, DIV, PRINT, HALT
+3. Components:
+   - Program Loader (reads program files like program.vm)
+   - Instruction Parser
+   - Stack Memory
+   - Execution Engine (interpreter)
+   - GUI for code editor, run button, output console, and stack visualization
+4. Include an AI module that can convert natural language input like:
+   "Add 5 and 10"
+   into VM instructions:
+   PUSH 5
+   PUSH 10
+   ADD
+   PRINT
+5. Code should be modular:
+   - VM.java (main runner)
+   - Instruction.java (instruction type)
+   - StackMemory.java (stack implementation)
+   - ProgramLoader.java (file reader)
+   - Interpreter.java (execution engine)
+   - GUI.java (interface)
+   - AITranslator.java (converts natural language to VM code)
+6. Provide a sample program.vm file with example instructions.
+7. Include comments explaining each part of the code.
+8. Ensure it compiles and runs on any platform with Java installed.
+9. Provide the full folder structure for the project.
+10. Make the GUI visually clear and easy to use, showing code, stack, and output.
+
+Goal: Create a complete AI-assisted Virtual Machine desktop application for executing a custom programming language.

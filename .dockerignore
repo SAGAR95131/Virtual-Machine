@@ -1,0 +1,9 @@
+# Docker ignore — exclude files not needed inside the container
+out/
+*.bat
+*.txt
+.git/
+.gitignore
+desktop app command.txt
+idea.txt
+output.txt

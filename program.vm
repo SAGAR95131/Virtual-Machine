@@ -1,0 +1,51 @@
+# ============================================================
+#  program.vm  —  Sample program for the Custom Stack VM
+#  Rules:
+#    - Lines starting with '#' are comments (ignored)
+#    - Blank lines are ignored
+#    - One instruction per line
+#    - Comments must be on their OWN line (not inline)
+# ============================================================
+
+# ── Example 1: Simple Addition ───────────────────────────────
+# Natural-language equivalent: "add 5 and 10"
+# AI layer would translate that sentence into the four lines below.
+PUSH 5
+PUSH 10
+ADD
+PRINT
+
+# ── Example 2: Subtraction ───────────────────────────────────
+# "subtract 3 from 20"
+PUSH 20
+PUSH 3
+SUB
+PRINT
+
+# ── Example 3: Multiplication ────────────────────────────────
+# "multiply 6 by 7"
+PUSH 6
+PUSH 7
+MUL
+PRINT
+
+# ── Example 4: Division ──────────────────────────────────────
+# "divide 100 by 4"
+PUSH 100
+PUSH 4
+DIV
+PRINT
+
+# ── Example 5: Chained Arithmetic ───────────────────────────
+# "compute (3 + 4) * 2"
+PUSH 3
+PUSH 4
+# stack now holds 7 at the top after ADD
+ADD
+PUSH 2
+# stack now holds 14 at the top after MUL
+MUL
+PRINT
+
+# ── Stop the VM ──────────────────────────────────────────────
+HALT
