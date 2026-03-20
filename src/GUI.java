@@ -86,6 +86,8 @@ public class GUI extends JFrame implements Interpreter.InterpreterListener {
     private JSlider speedSlider;
     private JPanel  libraryPanel;
     private VMEnv[] envOrder = VMEnv.values();
+    private VMDesktop vmDesktop;
+    private JTabbedPane centerTabs;
     private JPanel[] libCards;
     private JLabel hwCPU, hwRAM, hwOS, hwNet, hwDisk;
     private StackViz stackViz;
@@ -372,14 +374,17 @@ public class GUI extends JFrame implements Interpreter.InterpreterListener {
         return l;
     }
 
-    // ── Center: VM Header + Console + Editor ────────────────────────────────
+    // ── Center: VM Header + Tabs (Desktop | IDE) ──────────────────────────────
     private JPanel buildCenterPanel() {
         JPanel center = new JPanel(new BorderLayout(0, 0));
         center.setBackground(C_BG);
 
-        center.add(buildVMHeader(),    BorderLayout.NORTH);
+        center.add(buildVMHeader(), BorderLayout.NORTH);
 
-        // Upper: console + stack; Lower: editor; split vertically
+        // Build desktop panel
+        vmDesktop = new VMDesktop(this);
+
+        // Build IDE panel (console + stack + editor)
         JPanel upperPanel = new JPanel(new BorderLayout());
         upperPanel.setBackground(C_BG);
         upperPanel.add(buildVMConsole(), BorderLayout.CENTER);
@@ -390,7 +395,19 @@ public class GUI extends JFrame implements Interpreter.InterpreterListener {
         vertical.setDividerLocation(340);
         vertical.setBackground(C_BG);
 
-        center.add(vertical, BorderLayout.CENTER);
+        // Tabs: Desktop | IDE
+        centerTabs = new JTabbedPane();
+        centerTabs.setBackground(C_HEADER);
+        centerTabs.setForeground(C_TEXT);
+        centerTabs.setFont(F_BOLD);
+        UIManager.put("TabbedPane.selected",    C_SELECTED);
+        UIManager.put("TabbedPane.background",  C_HEADER);
+        UIManager.put("TabbedPane.foreground",  C_TEXT);
+        centerTabs.addTab("🖥  VM Desktop", vmDesktop);
+        centerTabs.addTab("⚡  IDE / Console", vertical);
+        centerTabs.setSelectedIndex(0);
+
+        center.add(centerTabs, BorderLayout.CENTER);
         return center;
     }
 
@@ -618,6 +635,7 @@ public class GUI extends JFrame implements Interpreter.InterpreterListener {
         }
 
         stackViz.update(new double[0]);
+        if (centerTabs != null) centerTabs.setSelectedIndex(1); // switch to IDE tab for VM
         interpreter = new Interpreter();
         interpreter.setProgram(currentProgram);
         interpreter.setListener(this);
@@ -639,6 +657,7 @@ public class GUI extends JFrame implements Interpreter.InterpreterListener {
         String src = codeEditor.getText();
         if (src.isBlank()) { appendConsole("⚠ No code to run.", C_RED); return; }
 
+        if (centerTabs != null) centerTabs.setSelectedIndex(1); // switch to IDE tab
         appendConsole("  ▶  Launching " + activeEnv.label + "...", C_ACCENT);
         appendConsole("  Runtime: " + activeEnv.osInfo, C_DIM);
 
